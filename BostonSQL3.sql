@@ -55,22 +55,25 @@ WHERE
     created_date LIKE '%JAN-07'
 ;
 
---5
+--5 Come back not does yet
 SELECT
-    course_date = jan 11 16 = 109 days AS end_of_sem
+    DATEADD(dd, 109, '2016/01/11') AS end_of_semester
 FROM
     dual
+;
 
---6
+--6--still not done
 SELECT
     course_no,
     section_id, 
-    start_date
+    TO_CHAR(start_date_time, 'MM-DD-YYYY HH:MI') AS start_date
 FROM
     section
 WHERE
-    course_no > 100,
-    coures_time between 9:30 & 11:30
+    course_no > 100
+    AND
+    TO_CHAR(start_date_time BETWEEN '930', 'HH:MI' AND '1130' , 'HHMI')
+;
 
 --7
 SELECT
