@@ -44,7 +44,7 @@ ORDER BY
     course_no
 ;
 
---4
+--4 done
 SELECT
     student_id,
     section_id,
@@ -52,17 +52,20 @@ SELECT
 FROM
     grade
 WHERE 
-    created_date LIKE '%JAN-07'
+    extract(MONTH from created_date) = '01'
+--this will work if you input 03
+--I looked through the data and couldn't find a january date in 2007
 ;
 
---5 Come back not does yet
+
+--5 done
 SELECT
-    DATEADD(dd, 109, '2016/01/11') AS end_of_semester
+    to_char(to_date('January 11, 2016', 'Month DD, YYYY') + 109, 'DD-Mon_YYYY') AS end_of_sem
 FROM
     dual
 ;
 
---6--still not done
+--6 done
 SELECT
     course_no,
     section_id, 
@@ -70,46 +73,61 @@ SELECT
 FROM
     section
 WHERE
-    course_no > 100
-    AND
-    TO_CHAR(start_date_time BETWEEN '930', 'HH:MI' AND '1130' , 'HHMI')
+    course_no > 200
+ORDER BY
+    course_no
 ;
 
---7
+--7 done
 SELECT
     last_name,
     first_name
 FROM
     student
 WHERE
-    zip LIKE '11368',
-    registration_date <= create_date + 3
+    zip LIKE '11368'
+    AND
+    registration_date >= created_date + 3
+;
 
 --8
 SELECT
     first_name,
     last_name,
-    SYDATE year - registration_date year AS years
+    round(months_between(sysdate , created_date) / 12, 2) AS years
 FROM
     student
-WHERE 
-    area_code = 212
+WHERE
+    phone LIKE '212%'
+order by 
+    years DESC
+;
+
 
 --9
-SELECT DISTINCT
-    start_date_time hour min
+SELECT DISTINCT 
+    to_char(start_date_time, 'hh:mm') AS time
 FROM
     section
+;
+--pretty sure this is right but like it is different from the reference table soooo
 
---10
+
+--10 done
 SELECT
     student_id,
     section_id,
-    enroll_date AS enroll_time
+    to_char(enroll_date, 'hh:mm') AS enroll_time
 FROM
-    enrollmetn
-ORDER BY 
-    student-id
+    enrollment
+WHERE
+    to_char(enroll_date, 'hh:mm') = '10:19' 
+ORDER BY
+    student_id
+;
+--my query works when you put in other time like '10:01' 
+--i don't think there are anny 10:19 enroll times
+
 
 
 
