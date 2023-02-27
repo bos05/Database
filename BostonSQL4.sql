@@ -36,9 +36,11 @@ WHERE
 SELECT
     city,
     state,
-    zipcode
+    count(*) AS zipcode
 FROM
     zipcode
+WHERE
+    zip < 100
 ;
 
 --5
