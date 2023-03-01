@@ -15,3 +15,5 @@ FROM
 SELECT
     course_no, 
 ;
+
+--3
