@@ -2,18 +2,37 @@
 --SQL 5
 --March 3rd 2023
 
---1
+--1 -- done
 SELECT
-    first_name,
-    last_name,
-    phone
+    stu.first_name,
+    stu.last_name,
+    stu.phone
 FROM
-    student
+    student stu
+JOIN 
+    zipcode zip
+ON 
+    zip.zip = stu.zip
+WHERE 
+    zip.city LIKE '%Newark'
+    AND 
+    zip.state LIKE '%NJ'
+ORDER BY
+    stu.last_name,
+    stu.first_name
 ;
 
 --2
 SELECT
-    course_no, 
-;
+    cou.course_no,
+    cou.description,
+    cou.prerequisite,
+    cour.description
+FROM
+    course cou
+JOIN
 
+ON 
+    cou.course_no = cour.course_no
+;
 --3
