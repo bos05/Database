@@ -3,13 +3,40 @@
 --March 22 2023
 
 --1
-FROM    
-    inst.instructor_id
+WITH num_students AS
+(
+    SELECT
+        sec.instructor_id,
+        COUNT(*) AS num_students
+    FROM
+        enrollment enr
+    JOIN
+        section sec
+    ON
+        sec.section_id = enr.section_id
+
+    GROUP BY
+        sec.instructor_id
+)
+
+SELECT 
+    inst.instructor_id,
     inst.first_name,
-    inst.last_name
+    inst.last_name,
+    num.num_students
 FROM
     instructor inst
+JOIN
+    num_students num
+ON
+    num.instructor_id = inst.instructor_id
+
+WHERE
+    num.num_students >= 25
+ORDER BY
+    num.num_students DESC
 ;
+
 
 --2
 FROM    
