@@ -124,9 +124,8 @@ WHERE
 ORDER BY 
     stu.last_name,
     stu.last_name,
-    gtc.num_gtc
-    ;
-
+    gtc.num_gtc DESC
+;
 
 
 
