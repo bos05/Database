@@ -77,7 +77,7 @@ ORDER BY
 ;
 
 
---3
+--3 done
 WITH num_gtc AS 
 (
     SELECT
@@ -129,15 +129,18 @@ ORDER BY
 
 
 
---4– needs fixing
-WITH avg_hm AS (
+--4– done
+WITH avg_hm AS 
+(
 SELECT
     gra.student_id,
-    AVG(gra.numeric_grade) AS avg_hm
+    ROUND(AVG(gra.numeric_grade), 2) AS avg_hm
 FROM
     grade gra
 WHERE 
     gra.grade_type_code LIKE 'HM'
+    AND
+    gra.section_id BETWEEN 110 AND 125-- you need to havel the same limiters in suqery
 GROUP BY
     gra.student_id
 )
@@ -147,30 +150,31 @@ SELECT DISTINCT
     stu.first_name,
     stu.last_name,
     gra.grade_type_code AS gr,
-    ROUND(hm.avg_hm, 2) AS average_grade
+    hm.avg_hm AS average_grade
 FROM    
-     student stu
+    student stu
 JOIN 
     enrollment enr
 ON
-     enr.student_id = stu.student_id
+    enr.student_id = stu.student_id
 JOIN
-     grade gra
+    grade gra
 ON
     gra.student_id = enr.student_id
     AND
-     gra.section_id = enr.section_id
+    gra.section_id = enr.section_id
 JOIN
-     avg_hm hm
+    avg_hm hm
 ON
-      hm.student_id = enr.student_id
+    hm.student_id = enr.student_id
+
 WHERE
-     gra.grade_type_code LIKE 'HM'
+    gra.grade_type_code LIKE 'HM'
     AND
-     enr.section_id BETWEEN 110 AND 125
+    enr.section_id BETWEEN 110 AND 125
     AND
-     hm.avg_hm > 80
-ORDEr BY
+    hm.avg_hm > 80
+ORDER BY
     hm.avg_hm DESC,
     stu.last_name, 
     stu.first_name
@@ -178,13 +182,39 @@ ORDEr BY
 
 
 
---5
-SELECT  
-    sec.section_id
-    cou.description,
+--5 done
+WITH num_codes_count AS
+(
+SELECT DISTINCT
+    section_id,
+    COUNT(*) AS num_codes
 FROM
-    section sec,
+    grade_type_weight
+GROUP BY
+    section_id
+)
+SELECT
+    sec.section_id,
+    cou.description,
+    cod.num_codes
+FROM
+    section sec
+JOIN
     course cou
+ON
+    cou.course_no = sec.course_no
+JOIN
+    num_codes_count cod
+ON
+    cod.section_id = sec.section_id
+WHERE
+    sec.section_id < 100
+    AND
+    cod.num_codes >2
+ORDER BY
+    cou.description,
+    cod.num_codes,
+    sec.section_id
 ;
 
 --6
