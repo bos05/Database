@@ -217,20 +217,74 @@ ORDER BY
     sec.section_id
 ;
 
---6
-SELECT  
-    zip.city,
-    zip.state,
-    zip.zip
+--6 done
+WITH intructor_per_zip AS
+(
+SELECT
+    zip.zip,
+    COUNT(ins.instructor_id) AS instructor_per_zip
 FROM
-    zpcode.zip 
+    instructor ins
+JOIN
+    zipcode zip
+ON
+    ins.zip = zip.zip
+GROUP BY
+    zip.zip
+)
+SELECT DISTINCT
+    zipp.city,
+    zipp.state,
+    zipp.zip,
+    ipz.instructor_per_zip
+FROM
+    zipcode zipp 
+JOIN
+    instructor ins
+ON
+    zipp.zip = ins.zip
+JOIN
+    intructor_per_zip ipz
+ON
+    zipp.zip = ipz.zip
+WHERE
+    ipz.instructor_per_zip > 1
+ORDER BY
+    ipz.instructor_per_zip DESC
 ;
 
---7
+--7 don
+WITH num_students  AS
+(
 SELECT
-    gra.grade_type_code
-FROM 
-    grade gra
+    cou.description,
+    COUNT(enr.student_id) AS num_students
+FROM
+    enrollment enr
+JOIN
+    section sec
+ON
+    enr.section_id = sec.section_id
+JOIN
+    course cou
+ON
+    sec.course_no = cou.course_no
+GROUP BY
+    cou.description
+)
+SELECT
+    cou.description,
+    ns.num_students
+FROM
+    course cou
+JOIN
+    num_students ns
+ON
+    cou.description = ns.description
+WHERE
+    ns.num_students > 10
+ORDER BY
+    ns.num_students
 ;
 
 --8
@@ -249,12 +303,47 @@ FROM
     student stu
 ;
 
---10
-SELECT  
-    stu.first_name, 
-    stu.last_name, 
-    gra.grade_type_code
+--10 -needs much fix
+WITH num_students AS
+(
+SELECT
+    enr.student_id,
+    COUNT(gra.grade_type_code) AS num_students
 FROM
-    student stu, 
+    enrollment enr
+JOIN
     grade gra
-;
+ON
+    enr.student_id = gra.student_id
+    AND
+    enr.section_id = gra.section_id
+GROUP BY
+    enr.student_id
+
+)
+
+SELECT DISTINCT
+    stu.first_name,
+    stu.last_name,
+    gra.grade_type_code,
+    ns.num_students
+FROM
+    student stu
+JOIN
+    enrollment enr
+ON
+    stu.student_id = enr.student_id
+JOIN
+    grade gra
+ON
+    enr.student_id = gra.student_id
+    AND
+    enr.section_id = gra.section_id
+JOIN
+    num_students ns
+ON
+    enr.student_id = ns.student_id
+WHERE
+    ns.num_students > 10
+ORDER BY
+    ns.num_students
