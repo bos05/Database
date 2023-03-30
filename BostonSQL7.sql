@@ -6,15 +6,57 @@
 SELECT
     ins.last_name,
     ins.first_name
-FROM    
-    isntructor ins
+FROM
+    instructor ins
+WHERE
+    ins.instructor_id NOT IN
+    (
+        SELECT DISTINCT
+            sec.instructor_id
+        FROM
+            section sec
+        JOIN
+            grade_type_weight gtw
+        ON
+            sec.section_id = gtw.section_id
+        WHERE EXISTS
+        (
+            SELECT
+                'x'
+            FROM
+                grade_type_weight gt
+            WHERE
+                gt.section_id = sec.section_id
+                AND
+                gtw.grade_type_code = 'PJ'
+        )
+    )
+    ORDER BY
+        ins.last_name
 ;
+    
 
 --2
-SELECT  
+sELECT
     COUNT(*) AS below_average
 FROM
     grade gra
+WHERE
+    gra.grade_type_code = 'FI'
+    AND 
+    section_id = 89
+    AND
+    gra.numeric_grade <
+    (
+        SELECT
+            AVG(gr.numeric_grade)AS average
+        FROM
+            grade gr
+        WHERE
+            gr.grade_type_code = 'FI'
+            AND 
+            gr.section_id = 89
+    )
 ;
 
 --3
