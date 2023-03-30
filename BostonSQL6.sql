@@ -257,21 +257,51 @@ ORDER BY
 WITH num_grades AS
 (
 SELECT
-    gra.description,
+    gr.description,
+    gra.numeric_grade,
     COUNT(*) AS numgrades
 FROM
-    grade_type gra
+    grade_type gr
+JOIN
+    grade_type_weight gtw
+ON
+    gr.grade_type_code = gtw.grade_type_code
+JOIN
+    grade gra
+ON
+    gtw.section_id = gra.section_id
+    AND 
+    gtw.grade_type_code = gra.grade_type_code
 GROUP BY
-    gra.description
+    
+    gr.description,
+    gra.numeric_grade
+    
 )
 SELECT
-    description
+    gr.description,
+    num.numgrades
 FROM
-    grade_type
+    grade_type gr
+JOIN
+    grade_type_weight gtw
+ON
+    gr.grade_type_code = gtw.grade_type_code
+JOIN
+    grade gra
+ON
+    gtw.section_id = gra.section_id
+    AND 
+    gtw.grade_type_code = gra.grade_type_code
+JOIN
+    num_grades num
+ON
+    gr.description = num.description
+    AND
+    gra.numeric_grade = num.numeric_grade
+    
 
-;
-
---8
+--8 done
 WITH num_students  AS
 (
 SELECT
