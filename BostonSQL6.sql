@@ -253,7 +253,25 @@ ORDER BY
     ipz.instructor_per_zip DESC
 ;
 
---7 don
+--7 -fix
+WITH num_grades AS
+(
+SELECT
+    gra.description,
+    COUNT(*) AS numgrades
+FROM
+    grade_type gra
+GROUP BY
+    gra.description
+)
+SELECT
+    description
+FROM
+    grade_type
+
+;
+
+--8
 WITH num_students  AS
 (
 SELECT
@@ -287,13 +305,6 @@ ORDER BY
     ns.num_students
 ;
 
---8
-SELECT
-    cou.description
-FROM    
-    course cou
-;
-
 --9
 SELECT
     stu.student_id,
@@ -303,12 +314,13 @@ FROM
     student stu
 ;
 
---10 -needs much fix
+--10-done
 WITH num_students AS
 (
 SELECT
+    gra.grade_type_code,
     enr.student_id,
-    COUNT(gra.grade_type_code) AS num_students
+    COUNT(*) AS num_students
 FROM
     enrollment enr
 JOIN
@@ -317,8 +329,12 @@ ON
     enr.student_id = gra.student_id
     AND
     enr.section_id = gra.section_id
-GROUP BY
-    enr.student_id
+HAVING
+    COUNT(*) > 10
+group by
+    enr.student_id,
+    gra.grade_type_code
+
 
 )
 
@@ -343,7 +359,12 @@ JOIN
     num_students ns
 ON
     enr.student_id = ns.student_id
+    AND
+    gra.grade_type_code = ns.grade_type_code
 WHERE
     ns.num_students > 10
 ORDER BY
-    ns.num_students
+    stu.first_name,
+    stu.last_name
+    
+
