@@ -59,21 +59,83 @@ WHERE
     )
 ;
 
---3
+--3 --done
+WITH sub AS
+(
 SELECT
     zip.city,
-    zip.state
-FROM
-    zipcode zip
-;
-
---4
-SELECT 
-    stu.student_id,
-    stu.first_name,
-    stu.last_name
+    zip.state,
+    COUNT(stu.student_id) AS number_#
 FROM
     student stu
+JOIN
+    zipcode zip
+ON
+    zip.zip = stu.zip
+GROUP BY
+     zip.city,
+     zip.state
+)
+
+SELECT
+    sub.city,
+    sub.state
+FROM
+    sub
+WHERE
+    sub.number_# =
+    (
+        SELECT
+            MAX(sub.number_#)
+        FROM
+            sub
+    )
+
+
+Ethan Leavitt
+Mon, Apr 10, 9:32 AM (2 days ago)
+to me
+
+--4 --done
+WITH sub_qary AS
+(
+    SELECT
+        grade.grade_type_code,
+        MIN(grade.numeric_grade) AS numeric_grade
+    FROM
+        grade
+    GROUP BY
+        grade.grade_type_code
+)
+SELECT
+    stu.student_id,
+    stu.first_name,
+    stu.last_name,
+    sub.numeric_grade
+    
+FROM
+    student stu
+JOIN
+    enrollment enro
+ON
+    stu.student_id = enro.student_id
+JOIN
+    grade gra
+ON
+    gra.section_id = enro.section_id
+    AND
+    gra.student_id = enro.student_id
+JOIN
+    sub_qary sub
+ON
+    sub.grade_type_code = gra.grade_type_code
+    AND
+    sub.numeric_grade = gra.numeric_grade
+WHERE
+    gra.grade_type_code = 'FI'
+    AND 
+    gra.section_id = 89
+
 ;
 
 --5
