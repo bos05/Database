@@ -92,9 +92,7 @@ WHERE
     )
 
 
-Ethan Leavitt
-Mon, Apr 10, 9:32 AM (2 days ago)
-to me
+
 
 --4 --done
 WITH sub_qary AS
@@ -155,13 +153,42 @@ FROM
     student stu
 ;
 
---7
+--7 --done
+WITH sub AS
+(
+    SELECT
+        cou.course_no,
+        cou.description,
+        COUNT(student_id) AS student_amount
+    FROM 
+        course cou
+    JOIN
+        section sec
+    ON
+        cou.course_no = sec.course_no
+    JOIN
+        enrollment enr
+    ON
+        sec.section_id = enr.section_id
+    GROUP BY
+        cou.course_no,
+        cou.description
+)
 SELECT
-    cou.course_no,
-    cou.course_description
-FROM 
-    course cou
+    course_no,
+    description
+FROM
+    sub 
+WHERE
+    sub.student_amount =
+    (
+        SELECT
+            MAX(sub.student_amount)
+        FROM
+            sub
+    )
 ;
+
 
 --8-- not really working needs to be if only one of he students section id is has a start time of 10:30
 TO_CHAR(mycolumn, 'hh24:mi') = '10:30'
