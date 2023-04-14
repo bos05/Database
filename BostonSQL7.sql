@@ -2,7 +2,7 @@
 --SQL 7
 --March 28th
 
---1
+--1 --done
 SELECT
     ins.last_name,
     ins.first_name
@@ -36,7 +36,7 @@ WHERE
 ;
     
 
---2
+--2 --done
 sELECT
     COUNT(*) AS below_average
 FROM
@@ -136,16 +136,57 @@ WHERE
 
 ;
 
---5
-SELECT  
-    stu.student_id.
-    stu.first_name,
-    stu.last_name
-FROM    
+--5 --done
+SELECT DISTINCT
+    stu.student_id,
+    stu.last_name,
+    stu.first_name
+FROM 
     student stu
-;
+JOIN
+    enrollment enr
+ON
+    stu.student_id = enr.student_id
+JOIN
+    section sec
+ON
+    enr.section_id = sec.section_id
+JOIN
+    course cou
+ON
+    sec.course_no = cou.course_no
+WHERE
+    stu.student_id IN
+    (
+        SELECT
+            enr1.student_id
+        FROM
+            enrollment enr1
+        JOIN
+            enrollment enr2
+        ON
+            enr1.student_id = enr2.student_id
+            AND enr1.section_id <> enr2.section_id
+        JOIN
+            section sec1
+        ON
+            enr1.section_id = sec1.section_id
+        JOIN
+            section sec2
+        ON
+            enr2.section_id = sec2.section_id
+        WHERE
+            sec1.course_no = sec2.course_no
+        GROUP BY
+            enr1.student_id
+        HAVING
+            COUNT(DISTINCT sec1.section_id) > 1
+    )
+ORDER BY
+    stu.last_name,
+    stu.first_name;
 
---6
+--6 --kind of done
 SELECT
     stu.first_name,
     stu.last_name,
@@ -207,7 +248,7 @@ WHERE
 ;
 
 
---8-- not really working needs to be if only one of he students section id is has a start time of 10:30
+--8 --done
 SELECT DISTINCT
     stu.first_name,
     stu.last_name
@@ -216,13 +257,13 @@ FROM
 JOIN
     enrollment enr
 ON
-    stu.student_id = enr.section_id
+    stu.student_id = enr.student_id
 JOIN
     section sec
 ON
     enr.section_id = sec.section_id
 WHERE
-    1 <= ANY
+    sec.course_no = ANY
     (
         SELECT DISTINCT
             cou.course_no
@@ -238,15 +279,14 @@ WHERE
             sec.section_id = enr.section_id
         WHERE
             TO_CHAR(sec.start_date_time, 'hh24:mi') = '10:30'
-        GROUP BY
-            enr.student_id
+        
 
     )
 ORDER BY
     stu.last_name
 ;
 
---9
+--9 -- done
 SELECT
     stu.first_name,
     stu.last_name,
