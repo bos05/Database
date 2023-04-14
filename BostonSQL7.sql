@@ -147,10 +147,27 @@ FROM
 
 --6
 SELECT
-    ste.first_name,
-    stu.last_name
+    stu.first_name,
+    stu.last_name,
+    COUNT(sec.course_no) AS number_#
 FROM
     student stu
+JOIN
+    enrollment enro
+ON
+    enro.student_id = stu.student_id
+JOIN
+    section sec
+ON
+    sec.section_id = enro.section_id
+WHERE
+    course_no BETWEEN 300 AND 399
+    
+GROUP BY
+    stu.first_name,
+    stu.last_name
+ORDER BY
+    last_name
 ;
 
 --7 --done
@@ -191,7 +208,43 @@ WHERE
 
 
 --8-- not really working needs to be if only one of he students section id is has a start time of 10:30
-TO_CHAR(mycolumn, 'hh24:mi') = '10:30'
+SELECT DISTINCT
+    stu.first_name,
+    stu.last_name
+FROM 
+    student stu
+JOIN
+    enrollment enr
+ON
+    stu.student_id = enr.section_id
+JOIN
+    section sec
+ON
+    enr.section_id = sec.section_id
+WHERE
+    1 <= ANY
+    (
+        SELECT DISTINCT
+            cou.course_no
+        FROM
+            course cou
+        JOIN 
+            section sec
+        ON
+            cou.course_no = sec.course_no
+        JOIN
+            enrollment enr
+        ON
+            sec.section_id = enr.section_id
+        WHERE
+            TO_CHAR(sec.start_date_time, 'hh24:mi') = '10:30'
+        GROUP BY
+            enr.student_id
+
+    )
+ORDER BY
+    stu.last_name
+;
 
 --9
 SELECT
