@@ -2,11 +2,92 @@
 --SQL 8
 --04/24/23
 
---1 --insert
+--1 --insert --done
+INSERT INTO 
+    instructor
+    
+(
+    instructor_id,
+    salutation,
+    first_name, 
+    last_name,
+    street_address,
+    zip,
+    phone, 
+    created_by,
+    created_date,
+    modified_by,
+    modified_date
+    
+)
+VALUES
+(
+    815,
+    'Mr',
+    'Hugo',
+    'Reyes',
+    '2342 Ocreanic Way',
+    '07002',
+    null,
+    'ME >:)',
+    SYSDATE,
+    'ME >:(',
+    SYSDATE
+)
+;
+--2 --insert --done
+INSERT INTO
+    section
+(
+    section_id,
+    course_no, 
+    section_no, 
+    start_date_time, 
+    location,
+    instructor_id,
+    capacity, 
+    created_by,
+    created_date,
+    modified_by,
+    modified_date
+)
+VALUES
+(
+    48,
+    142,
+    4,
+    TO_DATE('22-SEP-11 8:15', 'dd-MONTH-yy hh:mi'),
+    'L211',
+    815,
+    15, 
+    'ME>:)',
+    SYSDATE,
+    'ME:>:(',
+    SYSDATE
+    
+)
+;
+--3 --insert --done
+INSERT INTO 
+enrollment (
+    student_id, 
+    section_id,
+    enroll_date, 
+    final_grade,
+    created_by,
+    created_date,
+    modified_by,
+    modified_date
+)
+WITH p AS
+(
+    SELECT 375 as student_id, 48 as section_id, SYSDATE as enroll_date, null as final_grade, 'ME>:)' as created_by, SYSDATE as created_date, 'ME>:)' as modified_by, SYSDATE as modified_date  FROM dual UNION ALL
+    SELECT 137, 48, SYSDATE, null, 'ME>:)', SYSDATE, 'ME>:)', SYSDATE  FROM dual UNION ALL
+    SELECT 266, 48, SYSDATE, null, 'ME>:)', SYSDATE, 'ME>:)', SYSDATE  FROM dual UNION ALL
+    SELECT 282, 48, SYSDATE, null, 'ME>:)', SYSDATE, 'ME>:)', SYSDATE  FROM dual
 
---2 --insert
-
---3 --insert
+)
+SELECT p.student_id, p.section_id, p.enroll_date, p.final_grade, p.created_by, p.created_date, p.modified_by, p.modified_date FROM p;
 
 --4 --delete
 
