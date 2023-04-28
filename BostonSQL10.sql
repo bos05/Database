@@ -155,14 +155,29 @@ WHERE
     AND
     grade_type_code = 'FI'
 ;
---9
+--9 --partially done I am missing one of the section_ids
 SELECT
-    enr.section_id,
-    loation, 
-    enrolled
+    sec.section_id,
+    sec.location,
+    COUNT(DISTINCT enr.student_id) AS enrolled
 FROM
     enrollment enr
-;
+JOIN
+    section sec
+ON
+    enr.section_id = sec.section_id
+JOIN
+    course cou
+ON
+    sec.course_no = cou.course_no
+WHERE
+    cou.description LIKE 'Project Management'
+GROUP BY
+    sec.section_id,
+    sec.location
+ORDER BY
+    sec.section_id;
+
 --10
 SELECT
     ins.first_name, 
