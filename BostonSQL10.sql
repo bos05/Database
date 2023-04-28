@@ -90,15 +90,71 @@ WITH p AS
 SELECT p.student_id, p.section_id, p.enroll_date, p.final_grade, p.created_by, p.created_date, p.modified_by, p.modified_date FROM p;
 
 --4 --delete
+DELETE FROM
+    grade
+WHERE
+    student_id = 147
+    AND 
+    section_id = 120
+;
 
+
+DELETE FROM
+    enrollment
+WHERE
+    student_id = 147
+    AND 
+    section_id = 120
+;
 --5 --delete
+DELETE FROM
+    grade
+WHERE
+    student_id = 180
+    AND 
+    section_id = 119
+;
 
+
+DELETE FROM
+    enrollment
+WHERE
+    student_id = 180
+    AND 
+    section_id = 119
+;
 --6 --update
+UPDATE
+    instructor
+SET
+    phone = 4815162342
+WHERE
+    instructor_id = 815
+;
+    
 
 --7 --update
-
+UPDATE
+    grade
+SET
+    numeric_grade = 100
+WHERE
+    section_id = 119
+    AND
+    grade_type_code = 'HM'
+    AND
+    grade_code_occurrence = 1
+;
 --8 --update
-
+UPDATE
+    grade
+SET
+    numeric_grade = (numeric_grade * 1.1)
+WHERE
+    section_id = 119
+    AND
+    grade_type_code = 'FI'
+;
 --9
 SELECT
     enr.section_id,
