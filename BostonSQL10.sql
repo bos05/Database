@@ -178,28 +178,81 @@ GROUP BY
 ORDER BY
     sec.section_id;
 
---10
+--10 --done
 SELECT
     ins.first_name, 
     ins.last_name, 
     ins.phone
 FROM
     instructor ins
+JOIN
+    section sec
+ON
+    ins.instructor_id = sec.instructor_id
+JOIN
+    course cou
+ON
+    sec.course_no = cou.course_no
+WHERE
+    cou.description like 'Project Management'
+ORDER BY
+    ins.first_name
 ;
---11
+--11 --done
 SELECT
     stu.student_id,
     stu.first_name, 
     stu.last_name,
-    avg_grade
+    AVG(gra.numeric_grade) as average
 FROM    
     student stu
+JOIN
+    enrollment enr
+ON
+    stu.student_id = enr.student_id
+JOIN
+    grade gra
+ON
+    enr.student_id = gra.student_id
+    AND
+    enr.section_id = gra.section_id
+WHERE
+    enr.section_id = 119
+GROUP BY
+    stu.student_id,
+    stu.first_name, 
+    stu.last_name
 ;
---12
+
+--12 --not done
 SELECT  
-    num_of_instructors
+    COUNT(ins.instructor_id)
 FROM  
     instructor ins
+JOIN
+    section sec
+ON
+    ins.instructor_id = sec.section_id
+WHERE   
+    sec.location like 'L211'
+    AND
+    3 >=
+    (
+    SELECT
+        COUNT(enr.student_id)
+    FROM
+        enrollment enr
+    JOIN
+        section sec
+    ON
+        enr.section_id = sec.section_id
+    WHERE
+        sec.location like'L211'
+    GROUP BY    
+        sec.course_no
+    )
+GROUP BY
+    sec.course_no
 ;
 --13
 SELECT
