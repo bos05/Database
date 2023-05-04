@@ -224,43 +224,97 @@ GROUP BY
     stu.last_name
 ;
 
---12 --not done
-SELECT  
-    COUNT(ins.instructor_id)
-FROM  
+--12 --done
+WITH num_stu AS 
+(
+  SELECT
+    enr.student_id,
+    COUNT(*) AS student_num
+  FROM
+    enrollment enr
+  JOIN
+    section sec
+  ON
+    enr.section_id = sec.section_id
+  WHERE
+    sec.location LIKE 'L211'
+  GROUP BY
+    enr.student_id,
+    sec.course_no
+), 
+num_inst AS 
+(
+  SELECT  
+    ins.instructor_id,
+    sec.course_no
+  FROM  
+    instructor ins
+  JOIN
+    section sec
+  ON
+    ins.instructor_id = sec.instructor_id
+  JOIN
+    enrollment enr
+  ON
+    sec.section_id = enr.section_id
+  JOIN
+    num_stu ns
+  ON
+    enr.student_id = ns.student_id
+  WHERE   
+    sec.location LIKE 'L211'
+  GROUP BY
+    ins.instructor_id,
+    sec.course_no
+  HAVING
+    SUM(ns.student_num) > 3
+)
+SELECT
+    COUNT(*) AS num_instructors
+FROM 
+    num_inst
+;
+
+--13 --done
+WITH num_course as
+(
+SELECT
+    ins.instructor_id,
+    COUNT(DISTINCT sec.course_no) AS num_course
+FROM
+    section sec
+JOIN
+    instructor ins
+ON
+    sec.instructor_id = ins.instructor_id
+GROUP BY
+    ins.instructor_id
+
+)
+
+
+SELECT
+    (ins.salutation || ' ' ||ins.first_name || ' ' ||ins.last_name) AS instructor,
+    ins.phone
+FROM
     instructor ins
 JOIN
     section sec
 ON
-    ins.instructor_id = sec.section_id
-WHERE   
-    sec.location like 'L211'
+    ins.instructor_id = sec.instructor_id
+JOIN
+    num_course nc
+ON
+    ins.instructor_id = nc.instructor_id
+    AND 
+    sec.instructor_id = nc.instructor_id
+WHERE
+    sec.course_no = 142
     AND
-    3 >=
-    (
-    SELECT
-        COUNT(enr.student_id)
-    FROM
-        enrollment enr
-    JOIN
-        section sec
-    ON
-        enr.section_id = sec.section_id
-    WHERE
-        sec.location like'L211'
-    GROUP BY    
-        sec.course_no
-    )
-GROUP BY
-    sec.course_no
+    nc.num_course <= 1
+    
 ;
---13
-SELECT
-    ins.instructor,
-    ins.phone
-FROM
-    instructor ins
-;
+
 --14
 SELECT
     stu.first_name,
