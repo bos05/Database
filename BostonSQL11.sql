@@ -235,7 +235,9 @@ SELECT p.album_id, p.title, p.year, p.artist_id FROM p;
 
 
 
-INSERT INTO tracks (
+INSERT INTO
+tracks
+(
     track_id,
     name,
     milliseconds,
@@ -250,37 +252,36 @@ INSERT INTO tracks (
     unit_price,
     media_type_id
 )
-WITH b AS 
+WITH b AS
 (
-    SELECT 18 AS track_id, 'Hurt' AS name, 219000 AS milliseconds, 65 AS artist_id, 632 AS album_id, 11 AS genre_id, 32 AS play_count, 0 AS skip_count, null AS composer, 2 AS track_index, 3879731 AS bytes, 0 AS unit_price, 1 AS media_type_id FROM dual UNION ALL
-    SELECT 24, 'Make You Smile', 225000, 28, 89, 3, 81, 3, null, 1992294, 0.99, 4, null FROM dual UNION ALL
+    SELECT 18 AS track_id, 'Hurt' AS name, 219000 AS milliseconds, 65 AS artis_id, 632 AS album_id, 11 AS genre_id, 32 AS play_count, 0 AS skip_count, null AS composer, 2 AS track_index, 3879731 AS bytes, 0 AS unit_price, 1 AS media_type_id FROM dual UNION ALL
+    SELECT 24, 'Make You Smile', 225000, 28, 89, 3, 81, 3, null, null, 1992294, 0.99, 4 FROM dual UNION ALL
     SELECT 25, 'La Migra (Mas Espanol)', 174000, 55, 348, 3, 55, 0, null, 12, 2936013, 0.99, 4 FROM dual UNION ALL
     SELECT 34, 'Stars Come Out(Dillon Francis Remix)', 249000, 737, 200, 12, 5, 1, null, 1, 6291456, 0, 3 FROM dual UNION ALL
     SELECT 37, 'Christmas Eve Montage', 226000, 22, 85, 6, 15, 0, null, 15, 7864320, 0, 3 FROM dual UNION ALL
-    SELECT 60, 'Please Dont Leave Me', 232000, 38, 176, 2, 1, 2, 'P!nk' ||'&'|| 'Max Martin', 5, 81703181, 0.99, 6 FROM dual UNION ALL
+    SELECT 60, 'Please Dont Leave Me', 232000, 38, 176, 2, 1, 2, 'P!nk' ||'&'|| 'Max Martin', 5, 8703181, 0.99, 6 FROM dual UNION ALL
     SELECT 148, 'Shiver', 202000, 733, 192, 21, 12, 1, null, 1, 3460301, 0, 1 FROM dual UNION ALL
     SELECT 171, 'Promises', 257000, 119, 178, 14, 5, 0, null, 1, 8703181, 0, 1 FROM dual UNION ALL
     SELECT 184, 'Dont Let Me Get Me (Radio Edit)', 211000, 38, 332, 2, 0, 1, 'P!nk' ||'&'|| 'Dallas Austin', 2, 8178893, 0.99, 4 FROM dual UNION ALL
     SELECT 202, 'Running Out Of Angels(Demo)', 125000, 127, 186, 3, 69, 0, null, null, 1153434, 0.99, 4 FROM dual UNION ALL
     SELECT 236, 'Tempt My Trouble', 194000, 48, 342, 4, 8, 0, null, 1, 8283750, 1.99, 4 FROM dual UNION ALL
-    SELECT 289, 'White Horse', 234000, 97, 443, 11, 0, 3, null, 5, 8703181, 0.99, 4 FROM dual UNION ALL 
+    SELECT 289, 'White Horse', 234000, 97, 443, 11, 0, 3, null, 5, 8703181, 0.99, 4 FROM dual UNION ALL
     SELECT 301, 'The Bog (Radio Mix)', 243000, 12, 74, 5, 70, 0, null, null, 2097152, 0, 1 FROM dual UNION ALL
     SELECT 344, 'Seether', 197000, 732, 191, 3, 13, 0, 'Nina Gordon', 3, 3670016, 0, 1 FROM dual UNION ALL
-    SELECT 346, 'Untouched', 255000, 752, 435, 2, 42, 0 ,'Toby Gad, Jessica Origliasso' ||'&'|| 'Lisa Origliasso', 1, 4508877, 0.99, 6 FROM dual UNION ALL
-    SELECT 390, '!Purple (Sasha v. The Light)', 495000, 120, 179, 19, 60, 1, null, null, 8283750, 0, 1 FROM dual UNION ALL
+    SELECT 346, 'Untouched', 255000, 752, 435, 2, 42, 0, 'Toby Gad, Jessica Origliasso' ||'&'|| 'Lisa Origliasso', 1, 4508877, 0.99, 6 FROM dual UNION ALL
+    SELECT 390, '!Purple (Sasha v. The Light', 495000, 120, 179, 19, 60, 1, null, null, 8283750, 0, 1 FROM dual UNION ALL
     SELECT 391, 'Feel Good Inc (Single)', 221000, 46, 340, 4, 54, 0, null, 1, 3774874, 0.99, 6 FROM dual UNION ALL
     SELECT 759, 'Charlotte Sometimes (Single)', 253000, 13, 84, 3, 63, 0, null, 1, 2202010, 0, 1 FROM dual UNION ALL
     SELECT 788, 'Solsbury Hill', 259000, 98, 685, 8, 66, 0, null, null, 2306867, 0, 1 FROM dual UNION ALL
-    SELECT 798, 'For A Pessimist, Im Pretty Optimistic', 217000, 32, 93, 3, 68, 0, null, null, 1992294, 0.99, 4 FROM dual
+    SELECT 798, 'For A Pessimist, Im Pretty Optimistic', 217000, 32, 93, 3, 68, 0, null, null, 1992294, 0.90, 4 FROM dual UNION ALL
+    SELECT 31611, 'Soul Meets Body', 231000, 95, 198, 3, 65, 0, null, null, 1992294, 0, 1 FROM dual UNION ALL
+    SELECT 43173, 'Twas the Night Before Xmas', 248000, 126, 185, 3, 11, 0, null, null, 4194304, 0, 1 FROM dual 
+
+
 )
-SELECT b.track_id, b.name, b.album_id, b.artist_id, b.media_type_id, b.genre_id, b.composer, b.milliseconds, b.bytes, b.unit_price, b.play_count, b.skip_count, b.track_index 
-FROM b;
 
+SELECT b.track_id, b.name, b.milliseconds, b.artis_id, b.album_id, b.genre_id, b.play_count, b.skip_count, b.composer,b.track_index, b.bytes, b.unit_price, b.media_type_id FROM b;
 
-
-
-
-doesn't work
 
 
 
